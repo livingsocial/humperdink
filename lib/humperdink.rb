@@ -1,0 +1,7 @@
+require 'humperdink/base_tracker'
+require 'humperdink/base_tracker_fork_piping'
+require 'humperdink/base_tracker_redis'
+require 'humperdink/dirty_set'
+require 'humperdink/fork_savvy_redis'
+require 'humperdink/redis_dirty_set'
+require 'humperdink/version'
