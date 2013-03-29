@@ -67,6 +67,27 @@ module Humperdink
     end
   end
 
+  class DirtySetConfig
+    attr_accessor :clean_timeout,
+                  :max_clean_items,
+                  :max_dirty_items,
+                  :exclude_from_clean
+
+    def initialize(settings={})
+      @clean_timeout = settings[:clean_timeout]
+      @max_clean_items = settings[:max_clean_items]
+      @max_dirty_items = settings[:max_dirty_items]
+      @exclude_from_clean = settings[:exclude_from_clean]
+    end
+
+    def to_hash
+      {:clean_timeout => @clean_timeout,
+       :max_clean_items => @max_clean_items,
+       :max_dirty_items => @max_dirty_items,
+       :exclude_from_clean => @exclude_from_clean}
+    end
+  end
+
   class RedisDirtySetConfig < DirtySetConfig
     attr_accessor :key, :redis, :save_on_clean, :clean_at_exit
 

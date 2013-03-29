@@ -4,14 +4,12 @@ module Humperdink
   class DirtySet
     attr_reader :dirty, :clean, :config
 
-    def initialize(initial_contents=[], config=DirtySetConfig.new)
+    def initialize(initial_contents=[], config={})
       if initial_contents.is_a? Hash
         config = initial_contents
         initial_contents = []
       end
-      if config.is_a? Hash
-        config = DirtySetConfig.new(config)
-      end
+
       @clean = Set.new(initial_contents)
       @dirty = Set.new
       @config = config
@@ -19,7 +17,7 @@ module Humperdink
     end
 
     def set_time_to_clean
-      @time_to_clean = @config.clean_timeout ? Time.now + @config.clean_timeout : nil
+      @time_to_clean = @config[:clean_timeout] ? Time.now + @config[:clean_timeout] : nil
     end
 
     def <<(value)
@@ -28,17 +26,17 @@ module Humperdink
     end
 
     def getting_messy?
-      return true if @config.max_dirty_items && @dirty.length > @config.max_dirty_items
-      return true if @config.clean_timeout && Time.now > @time_to_clean
+      return true if @config[:max_dirty_items] && @dirty.length > @config[:max_dirty_items]
+      return true if @config[:clean_timeout] && Time.now > @time_to_clean
     end
 
     def clean!
       set_time_to_clean
-      if exclusions = @config.exclude_from_clean
+      if exclusions = @config[:exclude_from_clean]
         @dirty.delete_if { |item| exclusions.detect { |regex| item =~ regex } }
       end
       @clean.merge(@dirty)
-      if max = @config.max_clean_items
+      if max = @config[:max_clean_items]
         @clean.subtract(@clean.to_a[max..-1]) if @clean.length > max
       end
       cleaned = @dirty.to_a.dup # to_a just a pointer to the Set's internal Hash's keys
@@ -48,27 +46,6 @@ module Humperdink
 
     def length
       @clean.length # wonky -> doesn't include @dirty
-    end
-  end
-
-  class DirtySetConfig
-    attr_accessor :clean_timeout,
-                  :max_clean_items,
-                  :max_dirty_items,
-                  :exclude_from_clean
-
-    def initialize(settings={})
-      @clean_timeout = settings[:clean_timeout]
-      @max_clean_items = settings[:max_clean_items]
-      @max_dirty_items = settings[:max_dirty_items]
-      @exclude_from_clean = settings[:exclude_from_clean]
-    end
-
-    def to_hash
-      {:clean_timeout => @clean_timeout,
-       :max_clean_items => @max_clean_items,
-       :max_dirty_items => @max_dirty_items,
-       :exclude_from_clean => @exclude_from_clean}
     end
   end
 end
