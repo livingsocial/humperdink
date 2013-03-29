@@ -3,8 +3,8 @@ require 'tempfile'
 
 include Humperdink
 
-describe BaseTracker do
-  class TempfileEventConfig < BaseTrackerConfig
+describe Tracker do
+  class TempfileEventConfig < TrackerConfig
     attr_accessor :tempfile
 
     def initialize
@@ -21,7 +21,7 @@ describe BaseTracker do
   it 'should notify at_exit' do
     config = TempfileEventConfig.new
     fork do
-      BaseTracker.new(config)
+      Tracker.new(config)
     end
     Process.wait
     config.tempfile.tap { |f| f.close; f.open; f.read.should == "exit\n"; f.close! }
@@ -31,7 +31,7 @@ describe BaseTracker do
     config = TempfileEventConfig.new
     config.trigger_at_exit = false
     fork do
-      BaseTracker.new(config)
+      Tracker.new(config)
     end
     Process.wait
     config.tempfile.tap { |f| f.close; f.open; f.read.should == ''; f.close! }

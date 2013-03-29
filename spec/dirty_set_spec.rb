@@ -27,7 +27,7 @@ describe Humperdink::DirtySet do
     set.dirty.should == [].to_set
   end
 
-  it "should clean! dirty things to clean" do
+  it 'should clean! dirty things to clean' do
     set << 'foo'
     wuz_dirty = set.clean!
     wuz_dirty.should == ['foo']
@@ -35,7 +35,7 @@ describe Humperdink::DirtySet do
     set.dirty.should == [].to_set
   end
 
-  it "should support max_clean_items option" do
+  it 'should support max_clean_items option' do
     set = Humperdink::DirtySet.new(:max_clean_items => 3)
     set << 'foo'
     set << 'bar'
@@ -46,7 +46,7 @@ describe Humperdink::DirtySet do
     set.dirty.length.should == 0
   end
 
-  it "should support max_dirty_items option" do
+  it 'should support max_dirty_items option' do
     set = Humperdink::DirtySet.new(:max_dirty_items => 3)
     set << 'foo'
     set << 'bar'
@@ -56,14 +56,14 @@ describe Humperdink::DirtySet do
     set.dirty.length.should == 0
   end
 
-  it "should return length of clean keys" do
+  it 'should return length of clean keys' do
     set << 'foo'
     set.length.should == 0
     set.clean!
     set.length.should == 1
   end
 
-  it "should support exclude regex list option" do
+  it 'should support exclude regex list option' do
     set = Humperdink::DirtySet.new(:exclude_from_clean => [/foo/])
     set << 'foo'
     set << 'bar'
@@ -73,7 +73,7 @@ describe Humperdink::DirtySet do
     set.clean.should == ['bar'].to_set
   end
 
-  it "should support clean_timeout option" do
+  it 'should support clean_timeout option' do
     set = Humperdink::DirtySet.new(:clean_timeout => 10)
     set << 'foo'
     Timecop.travel(Time.now + 20) do
@@ -93,7 +93,7 @@ describe Humperdink::DirtySet do
     end
   end
 
-  it "will not trigger on clean_timeout all by itself" do
+  it 'will not trigger on clean_timeout all by itself' do
     set = Humperdink::DirtySet.new(:clean_timeout => 10)
     set << 'foo'
     set << 'bar'

@@ -1,12 +1,12 @@
 module Humperdink
-  class BaseTracker
+  class Tracker
     def initialize(tracker_config=nil)
       @config = tracker_config
       at_exit { on_event(:exit) unless @config && !@config.trigger_at_exit }
     end
 
     def default_tracker_config_class
-      BaseTrackerConfig
+      TrackerConfig
     end
 
     def config
@@ -56,7 +56,7 @@ module Humperdink
     end
   end
 
-  class BaseTrackerConfig
+  class TrackerConfig
     attr_accessor :enabled, :current_set, :trigger_at_exit
 
     def initialize(settings={})

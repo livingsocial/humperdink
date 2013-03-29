@@ -1,5 +1,5 @@
 module Humperdink
-  class BaseTrackerRedisConfig < BaseTrackerConfig
+  class TrackerRedisConfig < TrackerConfig
     attr_accessor :current_set, :tracker_state, :state_ttl
 
     def initialize(settings={})
@@ -88,7 +88,7 @@ module Humperdink
 
     def get_all_trackers_state
       result = {}
-      trackers = @redis.keys("#@tracker_state_base_key:*")
+      trackers = @redis.keys("#{@tracker_state_base_key}:*")
       trackers.each do |tracker|
         hostname, pid = tracker.split(':')[-2], tracker.split(':')[-1]
         result[hostname] ||= {}
@@ -104,7 +104,7 @@ module Humperdink
     end
 
     def this_process_tracker_state_key
-      "#@tracker_state_base_key:#{`hostname`.chomp}:#{Process.pid}"
+      "#{@tracker_state_base_key}:#{`hostname`.chomp}:#{Process.pid}"
     end
   end
 

@@ -1,9 +1,8 @@
 module Humperdink
   # For use with Resque or any forking scenario where the child process
   # needs to pipe its requested keys back to the parent, instead of
-  # handling it itself. Make sure and include this module _after_
-  # KeyTracker.
-  module BaseTrackerForkPiping
+  # handling it itself.
+  module ForkPiping
     def init_fork_piping(ppid=Process.pid, pipe=IO.pipe)
       unless @ppid || !@parent_pipe_method
         @ppid = ppid
@@ -35,7 +34,7 @@ module Humperdink
       !@ppid || (@ppid && Process.pid == @ppid)
     end
 
-    # TODO: for general use, presuming \n to be a valid delimiter is no bueno
+    # TODO: presuming \n to be a valid delimiter is no bueno
     def write_to_child_pipe(data)
       @write.write("#{data}\n")
     end
