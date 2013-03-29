@@ -130,12 +130,3 @@ describe RedisDirtySet do
     listener.message[0..4].should == 'Saved'
   end
 end
-
-describe RedisDirtySetConfig do
-  it "should to_hash all of its settings" do
-    settings = {:clean_timeout => 12, :max_clean_items => 13, :max_dirty_items => 14, :exclude_from_clean => [/foo/],
-                :key => 'key', :redis => 'redis://127.0.0.1:6379/2', :save_on_clean => true}
-    to_hash = RedisDirtySetConfig.new(settings).to_hash
-    to_hash.should == settings
-  end
-end
