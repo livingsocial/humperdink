@@ -16,7 +16,7 @@ module Humperdink
       @redis ||= begin
         r = @config[:redis]
         r = r.is_a?(Redis) ? r : Redis.connect(:url => r)
-        @redis = ForkSavvyRedis.new(r)
+        ForkSavvyRedis.new(r)
       end
     end
 

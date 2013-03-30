@@ -31,7 +31,7 @@ describe 'Tracker with RedisDirtySet' do
   end
 
   it 'should handle events' do
-    config = TrackerRedisConfig.new(:redis => )
+    config = TrackerRedisConfig.new
 
     def config.state(event_message)
       @event_message = event_message

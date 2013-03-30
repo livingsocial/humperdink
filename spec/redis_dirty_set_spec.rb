@@ -110,15 +110,6 @@ describe RedisDirtySet do
     set_too.clean.should == ['exit'].to_set
   end
 
-  class TestListener
-    attr_accessor :event, :message
-
-    def on_event(event, message)
-      @event = event
-      @message = message
-    end
-  end
-
   it 'should support save event notification' do
     set = new_set
     listener = TestListener.new

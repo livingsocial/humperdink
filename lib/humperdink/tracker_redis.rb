@@ -1,4 +1,20 @@
 module Humperdink
+  class TrackerConfig
+    attr_accessor :enabled, :current_set, :trigger_at_exit
+
+    def initialize(settings={})
+      @enabled = settings.keys.include?(:enabled) ? settings[:enabled] : true
+      @trigger_at_exit = settings.keys.include?(:trigger_at_exit) ? settings[:trigger_at_exit] : true
+    end
+
+    def on_event(event, message)
+    end
+
+    def create_set
+      @current_set = Set.new
+    end
+  end
+
   class TrackerRedisConfig < TrackerConfig
     attr_accessor :current_set, :tracker_state, :state_ttl
 

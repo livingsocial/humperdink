@@ -5,7 +5,7 @@ require 'ostruct'
 include Humperdink
 
 describe Tracker do
-  class TempfileEventConfig < TrackerConfig
+  class TempfileEventListener
     attr_accessor :tempfile
 
     def initialize
@@ -20,32 +20,28 @@ describe Tracker do
   end
 
   it 'should notify at_exit' do
-    config = TempfileEventConfig.new
+    listener = TempfileEventListener.new
     fork do
-      Tracker.new(config)
+      Tracker.new(:event_listener => listener)
     end
     Process.wait
-    config.tempfile.tap { |f| f.close; f.open; f.read.should == "exit\n"; f.close! }
+    listener.tempfile.tap { |f| f.close; f.open; f.read.should == "exit\n"; f.close! }
   end
 
   it 'should not notify at_exit if configuration says no-no' do
-    config = TempfileEventConfig.new
-    config.trigger_at_exit = false
+    listener = TempfileEventListener.new
     fork do
-      Tracker.new(config)
+      Tracker.new(:event_listener => listener, :trigger_at_exit => false)
     end
     Process.wait
-    config.tempfile.tap { |f| f.close; f.open; f.read.should == ''; f.close! }
+    listener.tempfile.tap { |f| f.close; f.open; f.read.should == ''; f.close! }
   end
 
-  it 'should instantiate default config class' do
-    Tracker.new.config.should be_a TrackerConfig
-  end
-
-  it 'should accept config setter' do
+  it 'should instantiate with default config' do
     tracker = Tracker.new
-    tracker.config = OpenStruct.new(:trigger_at_exit => false)
-    tracker.config.should be_a OpenStruct
+    tracker.config[:enabled].should be_true
+    tracker.config[:trigger_at_exit].should be_true
+    tracker.config[:event_listener].should be_nil
   end
 
   it 'should be enabled by default' do
@@ -54,11 +50,9 @@ describe Tracker do
 
   it 'should reset config and enabled' do
     tracker = Tracker.new
-    tracker.config.enabled = false
-    tracker.config = Object.new
+    tracker.config[:enabled] = false
     tracker.reset_tracker_config
-    tracker.config.should be_a TrackerConfig
-    tracker.tracker_enabled.should be_true
+    tracker.config[:enabled] = true
   end
 
   it 'should reset_tracker when disabled' do
@@ -71,31 +65,20 @@ describe Tracker do
       @reset_called
     end
 
-    tracker.config.enabled = false
+    tracker.config[:enabled] = false
     tracker.tracker_enabled
     tracker.reset_called.should be_true
   end
 
   it 'should shutdown and reset config and disable itself' do
+    listener = TestListener.new
+
     tracker = Tracker.new
-    config = tracker.config
-
-    def config.on_event(event, message)
-      @last_event = event
-      @last_message = message
-    end
-
-    def config.last_event
-      @last_event
-    end
-
-    def config.last_message
-      @last_message
-    end
+    tracker.config[:event_listener] = listener
 
     tracker.shutdown(Exception.new 'foobar')
-    config.last_event.should == :shutdown
-    config.last_message.should == 'foobar'
+    listener.event.should == :shutdown
+    listener.message.should == 'foobar'
 
     tracker.tracker_enabled.should be_false
   end
