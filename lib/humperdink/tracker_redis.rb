@@ -18,6 +18,8 @@ module Humperdink
       @tracker_state = RedisStatePersister.new(@redis_set_config.redis, "#{base_key}:trackers", @state_ttl)
     end
 
+    #####
+    ## FACADE ATTRIBUTES
     def persist_threshold
       @redis_set_config.max_dirty_items
     end
@@ -49,6 +51,8 @@ module Humperdink
     def exclude_keys=(value)
       @redis_set_config.exclude_from_clean = value
     end
+    ## FACADE ATTRIBUTES
+    #####
 
     def create_set
       @current_set = Humperdink::RedisDirtySet.new(@redis_set_config)
@@ -58,8 +62,6 @@ module Humperdink
     end
 
     def on_event(event, message)
-      $callers ||= Set.new
-      $callers << caller[0..2] if event == :exit
       raise 'on_event :exit!' if event == :exit
       state = state([event, message].compact.last)
       ttl = event == :exit ? 30 : @state_ttl
