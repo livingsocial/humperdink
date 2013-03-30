@@ -12,44 +12,44 @@ module Humperdink
                                         :exclude_from_clean => settings[:exclude_keys] || [],
                                         :save_on_clean => true,
                                         :key => base_key})
-      @redis_set_config = RedisDirtySetConfig.new(config_settings)
+      @redis_set_config = config_settings
 
       @state_ttl = settings[:state_ttl] || (60 * 15)
-      @tracker_state = RedisStatePersister.new(@redis_set_config.redis, "#{base_key}:trackers", @state_ttl)
+      @tracker_state = RedisStatePersister.new(@redis_set_config[:redis], "#{base_key}:trackers", @state_ttl)
     end
 
     #####
     ## FACADE ATTRIBUTES
     def persist_threshold
-      @redis_set_config.max_dirty_items
+      @redis_set_config[:max_dirty_items]
     end
 
     def persist_threshold=(value)
-      @redis_set_config.max_dirty_items = value
+      @redis_set_config[:max_dirty_items] = value
     end
 
     def persist_interval_in_seconds
-      @redis_set_config.clean_timeout
+      @redis_set_config[:clean_timeout]
     end
 
     def persist_interval_in_seconds=(value)
-      @redis_set_config.clean_timeout = value
+      @redis_set_config[:clean_timeout] = value
     end
 
     def max_items
-      @redis_set_config.max_clean_items
+      @redis_set_config[:max_clean_items]
     end
 
     def max_items=(value)
-      @redis_set_config.max_clean_items = value
+      @redis_set_config[:max_clean_items] = value
     end
 
     def exclude_keys
-      @redis_set_config.exclude_from_clean
+      @redis_set_config[:exclude_from_clean]
     end
 
     def exclude_keys=(value)
-      @redis_set_config.exclude_from_clean = value
+      @redis_set_config[:exclude_from_clean] = value
     end
     ## FACADE ATTRIBUTES
     #####
@@ -62,7 +62,6 @@ module Humperdink
     end
 
     def on_event(event, message)
-      raise 'on_event :exit!' if event == :exit
       state = state([event, message].compact.last)
       ttl = event == :exit ? 30 : @state_ttl
 
