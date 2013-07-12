@@ -111,9 +111,8 @@ describe RedisDirtySet do
   end
 
   it 'should support save event notification' do
-    set = new_set
     listener = TestListener.new
-    set.event_listener = listener
+    set = new_set(:event_listener => listener)
     set << 'foo'
     set.save
 

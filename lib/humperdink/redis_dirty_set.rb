@@ -2,8 +2,6 @@ require 'redis'
 
 module Humperdink
   class RedisDirtySet < DirtySet
-    attr_accessor :event_listener
-
     def initialize(initial_content=[], config={})
       unless initial_content.is_a?(Array)
         initial_content, config = [[], initial_content]
@@ -52,7 +50,11 @@ module Humperdink
     end
 
     def notify_event(event, message=nil)
-      @event_listener.on_event(event, message) if @event_listener
+      event_listener.on_event(event, state_hash, message) if event_listener
+    end
+
+    def event_listener
+      @config[:event_listener]
     end
 
     def state_hash

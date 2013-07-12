@@ -103,4 +103,16 @@ describe Humperdink::DirtySet do
     end
   end
 
+  it 'should clear itself' do
+    set = Humperdink::DirtySet.new(:max_dirty_items => 1)
+    set << 'foo'
+    set << 'bar'
+    set << 'quux'
+    set.dirty.length.should == 1
+    set.clean.length.should == 2
+    set.clear
+    set.dirty.length.should == 0
+    set.clean.length.should == 0
+  end
+
 end

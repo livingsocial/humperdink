@@ -1,14 +1,14 @@
 Bundler.require
 
 require 'rspec'
-require 'i18n'
 require 'timecop'
 
 class TestListener
-  attr_accessor :event, :message
+  attr_accessor :event, :state_hash, :message
 
-  def on_event(event, message)
+  def on_event(event, state_hash, message)
     @event = event
+    @state_hash = state_hash
     @message = message
   end
 end

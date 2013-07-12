@@ -15,7 +15,6 @@ Gem::Specification.new do |gem|
   gem.require_paths = %w(lib)
   gem.version       = Humperdink::VERSION
 
-  gem.add_dependency 'i18n', '0.6.1'
   gem.add_dependency 'hiredis', '~> 0.4.5'
   gem.add_dependency 'redis', '~> 2.2.0'
 

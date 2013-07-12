@@ -47,5 +47,10 @@ module Humperdink
     def length
       @clean.length # wonky -> doesn't include @dirty
     end
+
+    def clear
+      @clean.clear
+      @dirty.clear
+    end
   end
 end

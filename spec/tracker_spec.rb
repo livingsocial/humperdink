@@ -14,7 +14,7 @@ describe Tracker do
       @tempfile.open
     end
 
-    def on_event(event, message)
+    def on_event(event, state_hash, message)
       @tempfile.puts(event)
     end
   end
@@ -22,7 +22,7 @@ describe Tracker do
   it 'should notify at_exit' do
     listener = TempfileEventListener.new
     fork do
-      Tracker.new(:event_listener => listener)
+      Tracker.new(:event_listener => listener, :trigger_at_exit => true)
     end
     Process.wait
     listener.tempfile.tap { |f| f.close; f.open; f.read.should == "exit\n"; f.close! }
@@ -45,6 +45,8 @@ describe Tracker do
   end
 
   it 'should be enabled by default' do
+    # I believe this is for backward compatibility with internal LS gem this
+    # is being extracted from, but perhaps should be changed to default to false.
     Tracker.new.tracker_enabled.should be_true
   end
 

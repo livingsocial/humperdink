@@ -1,10 +1,20 @@
 module Humperdink
   class Tracker
-    attr_reader :current_set, :config
+    attr_reader :set, :config
 
-    def initialize(config={})
-      @config = default_config.merge(config)
+    def initialize(set=Set.new, config={})
+      if set.is_a? Hash
+        @set = Set.new
+        @config = set
+      else
+        @set = set
+        @config = default_config.merge(config)
+      end
       at_exit { on_event(:exit) unless @config && !@config[:trigger_at_exit] }
+    end
+
+    def track(data)
+      @set << data
     end
 
     def default_config
@@ -12,6 +22,7 @@ module Humperdink
     end
 
     def reset_tracker
+      @set.clear
     end
 
     def reset_tracker_config
@@ -34,7 +45,14 @@ module Humperdink
     end
 
     def on_event(event, message=nil)
-      @config[:event_listener].on_event(event, message) if @config[:event_listener]
+      @config[:event_listener].on_event(event, state_hash, message) if @config[:event_listener]
+    end
+
+    def state_hash
+      {
+        :enabled => @config[:enabled],
+        :trigger_at_exit => @config[:trigger_at_exit]
+      }
     end
 
     # Anytime an exception happens, we want to skedaddle out of the way
@@ -47,10 +65,6 @@ module Humperdink
       end
       @config = default_config
       @config[:enabled] = false
-    end
-    
-    def create_set
-      @current_set = Set.new
     end
   end
 end
