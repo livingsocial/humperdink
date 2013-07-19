@@ -13,7 +13,7 @@ end
 def reset_backend
   @redis.flushdb
 
-  base_key = 'runtime_metrics:key_tracker:benchmarks'
+  base_key = 'runtime_metrics:tracker:benchmarks'
   @state_persister = Humperdink::RedisStatePersister.new(@redis, "#{base_key}:trackers")
   @redis_dirty_set = Humperdink::RedisDirtySet.new(
     :key => base_key,
@@ -59,7 +59,6 @@ end
 
 def persist_threshold_100_with_heavy_regexes
   ex = [].tap { |a| 100.times { a << /#{rand(1_000_000**2)}/ }}
-  # puts ex.inspect
   @redis_dirty_set.config[:exclude_from_clean] = ex
   @redis_dirty_set.config[:max_dirty_items] = 100
   @data.each do |key|

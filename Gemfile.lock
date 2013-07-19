@@ -10,6 +10,7 @@ GEM
   specs:
     diff-lcs (1.2.1)
     hiredis (0.4.5)
+    i18n (0.6.4)
     json (1.7.7)
     multi_json (1.6.1)
     rack (1.5.2)
@@ -47,6 +48,7 @@ PLATFORMS
 
 DEPENDENCIES
   humperdink!
+  i18n
   json
   rake
   rcov
