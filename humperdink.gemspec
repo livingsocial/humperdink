@@ -16,7 +16,7 @@ Gem::Specification.new do |gem|
   gem.version       = Humperdink::VERSION
 
   gem.add_dependency 'hiredis', '~> 0.4.5'
-  gem.add_dependency 'redis', '~> 2.2.0'
+  gem.add_dependency 'redis', '> 2.2.0'
 
   gem.add_development_dependency 'i18n'
   gem.add_development_dependency 'json'

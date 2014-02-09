@@ -1,9 +1,9 @@
 PATH
   remote: .
   specs:
-    humperdink (0.0.1)
+    humperdink (0.0.2)
       hiredis (~> 0.4.5)
-      redis (~> 2.2.0)
+      redis (> 2.2.0)
 
 GEM
   remote: https://rubygems.org/
