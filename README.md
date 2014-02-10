@@ -40,7 +40,7 @@ method.
 
 [examples/i18n/key_tracker.rb](https://github.com/livingsocial/humperdink/blob/master/examples/i18n/key_tracker.rb)
 
-```
+```ruby
 Bundler.require
 require File.expand_path('../i18n_util', __FILE__)
 
@@ -133,14 +133,14 @@ calls.
 
 The `DirtySet` can be configured with these options:
 
-`:clean_timeout` - number of seconds to wait between write calls.
-`:max_dirty_items` - threshold on count of items needing to be persisted.
-`:exclude_from_clean` - a regular expression to filter out items to be persisted.
-`:max_clean_items` - caps the amount of already persisted data, to restrict memory usage in exchange for potential redundant persistence. 
+- `:clean_timeout` - number of seconds to wait between write calls.
+- `:max_dirty_items` - threshold on count of items needing to be persisted.
+- `:exclude_from_clean` - a regular expression to filter out items to be persisted.
+- `:max_clean_items` - caps the amount of already persisted data, to restrict memory usage in exchange for potential redundant persistence. 
 
 The `RedisDirtySet` adds an additional option:
 
-`:clean_at_exit` to persist when the process exits.
+- `:clean_at_exit` to persist when the process exits.
 
 ### Different Configuration Contexts
 
@@ -152,7 +152,7 @@ any value.
 
 For Resque, which runs events in a child process and bypasses any
 `at_exit` blocks, we came up with a `ForkSavvyRedis` wrapper and
-'ForkPiping' mixin which will ensure tracked items from child processes
+`ForkPiping` mixin which will ensure tracked items from child processes
 are piped up to the parent process and persisted through it.
 
 ## Future Plans
