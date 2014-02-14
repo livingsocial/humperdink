@@ -3,7 +3,7 @@ require File.expand_path('../i18n_util', __FILE__)
 
 class KeyTracker
   def initialize(redis, key)
-    redis_set = Humperdink::RedisDirtySet.new(:redis => redis, :key => key, :save_on_clean => true, :max_dirty_items => 9)
+    redis_set = Humperdink::RedisDirtySet.new(:redis => redis, :key => key, :max_dirty_items => 9)
     @tracker = Humperdink::Tracker.new(redis_set, :enabled => true)
   end
 

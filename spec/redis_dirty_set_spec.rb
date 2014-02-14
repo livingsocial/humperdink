@@ -39,38 +39,20 @@ describe RedisDirtySet do
     set_tri.clean.should == ['foo', 'bar', 'quux'].to_set
   end
 
-  it 'should support save_on_clean option' do
-    set = new_set(:save_on_clean => true)
+  it 'should only save cleaned items' do
+    set = new_set
     set << 'foo'
     set.clean!
+
+    set << 'bar'
 
     set_too = new_set
     set_too.load
     set_too.clean.should == ['foo'].to_set
   end
 
-  it 'should only save cleaned items with save_on_clean option' do
-    set = new_set(:save_on_clean => true)
-    set << 'foo'
-    set.clean!
-
-    set << 'bar'
-    set.should_receive(:save).with(['bar'])
-    set.clean!
-  end
-
-  it 'should not autosave without save_on_clean option' do
-    set = new_set(:save_on_clean => false)
-    set << 'foo'
-    set.clean!
-
-    set_too = new_set
-    set_too.load
-    set_too.clean.should == [].to_set
-  end
-
   it 'should automagically work with max_dirty_items' do
-    set = new_set(:max_dirty_items => 1, :save_on_clean => true)
+    set = new_set(:max_dirty_items => 1)
     set << 'fuh'
     set << 'buh'
 
@@ -80,7 +62,7 @@ describe RedisDirtySet do
   end
 
   it 'should automagically work with clean_timeout option' do
-    set = new_set(:clean_timeout => 10, :save_on_clean => true)
+    set = new_set(:clean_timeout => 10)
     set << 'fuh'
 
     Timecop.travel(Time.now + 20) do
@@ -99,7 +81,7 @@ describe RedisDirtySet do
   end
 
   it 'should support clean_at_exit option' do
-    set = new_set(:save_on_clean => true, :clean_at_exit => true)
+    set = new_set(:clean_at_exit => true)
     fork do
       set << 'exit'
     end

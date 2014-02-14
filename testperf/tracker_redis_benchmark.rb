@@ -18,8 +18,7 @@ def reset_backend
   @redis_dirty_set = Humperdink::RedisDirtySet.new(
     :key => base_key,
     :redis => @redis,
-    :event_listener => @state_persister,
-    :save_on_clean => true
+    :event_listener => @state_persister
   )
   @tracker = Humperdink::Tracker.new(@redis_dirty_set, :event_listener => @state_persister)
 

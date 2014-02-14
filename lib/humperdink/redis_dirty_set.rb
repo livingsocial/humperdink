@@ -20,7 +20,7 @@ module Humperdink
 
     def clean!
       to_save = super
-      save(to_save) if @config[:save_on_clean]
+      save(to_save)
     end
 
     def load
