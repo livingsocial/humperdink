@@ -49,14 +49,6 @@ module Humperdink
       end
     end
 
-    def notify_event(event, message=nil)
-      event_listener.on_event(event, state_hash, message) if event_listener
-    end
-
-    def event_listener
-      @config[:event_listener]
-    end
-
     def state_hash
       {
           :max_items => @config[:max_clean_items],

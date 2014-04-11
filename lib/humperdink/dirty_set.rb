@@ -2,6 +2,8 @@ module Humperdink
   # as a stand-alone class, this is a bit wonky in ways that are specific to its context here,
   # so ... if you think you want to extract this out for re-use, consider said wonkiness.
   class DirtySet
+    include HasEventListener
+
     attr_reader :dirty, :clean, :config
 
     def initialize(initial_contents=[], config={})
@@ -35,12 +37,14 @@ module Humperdink
       if exclusions = @config[:exclude_from_clean]
         @dirty.delete_if { |item| exclusions.detect { |regex| item =~ regex } }
       end
+      dirty_count = @dirty.count
       @clean.merge(@dirty)
       if max = @config[:max_clean_items]
         @clean.subtract(@clean.to_a[max..-1]) if @clean.length > max
       end
       cleaned = @dirty.to_a.dup # to_a just a pointer to the Set's internal Hash's keys
       @dirty.clear
+      notify_event(:clean!, "Cleaned #{dirty_count} members")
       cleaned
     end
 
