@@ -1,3 +1,4 @@
+require 'humperdink/has_event_listener'
 require 'humperdink/dirty_set'
 require 'humperdink/fork_piping'
 require 'humperdink/fork_savvy_redis'

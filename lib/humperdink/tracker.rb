@@ -1,5 +1,7 @@
 module Humperdink
   class Tracker
+    include HasEventListener
+
     attr_reader :set, :config
 
     def initialize(set=Set.new, config={})
@@ -10,7 +12,7 @@ module Humperdink
         @set = set
         @config = default_config.merge(config)
       end
-      at_exit { on_event(:exit) unless @config && !@config[:trigger_at_exit] }
+      at_exit { notify_event(:exit) unless @config && !@config[:trigger_at_exit] }
     end
 
     def track(data)
@@ -36,16 +38,12 @@ module Humperdink
 
       if (was_enabled || was_enabled.nil?) && !@enabled
         reset_tracker
-        on_event(:disabled)
+        notify_event(:disabled)
       elsif !was_enabled && @enabled
-        on_event(:enabled)
+        notify_event(:enabled)
       end
 
       @enabled
-    end
-
-    def on_event(event, message=nil)
-      @config[:event_listener].on_event(event, state_hash, message) if @config[:event_listener]
     end
 
     def state_hash
@@ -59,7 +57,7 @@ module Humperdink
     # and let life roll on without any tracking in the loop.
     def shutdown(exception)
       begin
-        on_event(:shutdown, "#{exception.message}")
+        notify_event(:shutdown, "#{exception.message}")
       rescue => e
         $stderr.puts([e.message, e.backtrace].join("\n")) rescue nil
       end

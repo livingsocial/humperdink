@@ -115,4 +115,17 @@ describe Humperdink::DirtySet do
     set.clean.length.should == 0
   end
 
+  it 'should support clean! event notification' do
+    listener = TestListener.new
+    set = Humperdink::DirtySet.new(:event_listener => listener)
+
+    count = rand(7) + 3
+    count.times do |i|
+      set << "foo-#{i}"
+    end
+
+    set.clean!
+    listener.event.should == :clean!
+    listener.message.should match(/Cleaned #{count} members/)
+  end
 end
