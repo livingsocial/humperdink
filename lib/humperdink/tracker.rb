@@ -2,6 +2,11 @@ module Humperdink
   class Tracker
     include HasEventListener
 
+    # This is included for backwards compatibility.
+    # :on_event should be considered deprecated
+    # and will be removed in the future
+    alias_method :on_event, :notify_event
+
     attr_reader :set, :config
 
     def initialize(set=Set.new, config={})
