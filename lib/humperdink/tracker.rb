@@ -62,7 +62,7 @@ module Humperdink
     # and let life roll on without any tracking in the loop.
     def shutdown(exception)
       begin
-        notify_event(:shutdown, "#{exception.message}")
+        notify_event(:shutdown, { :exception_message => exception.message })
       rescue => e
         $stderr.puts([e.message, e.backtrace].join("\n")) rescue nil
       end

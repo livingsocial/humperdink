@@ -44,8 +44,7 @@ module Humperdink
             unwrapped_redis.sadd(@config[:key], to_save.to_a)
           end
         end
-        message = "Saved #{to_save.length} keys to RedisPersister: #{unwrapped_redis.client.id}"
-        notify_event(:save, message)
+        notify_event(:save, {:count => to_save.length, :redis_id => unwrapped_redis.client.id})
       end
     end
 

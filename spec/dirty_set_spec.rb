@@ -126,6 +126,6 @@ describe Humperdink::DirtySet do
 
     set.clean!
     listener.event.should == :clean!
-    listener.message.should match(/Cleaned #{count} members/)
+    listener.data[:count].should == count
   end
 end

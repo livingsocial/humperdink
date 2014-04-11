@@ -99,6 +99,8 @@ describe RedisDirtySet do
     set.save
 
     listener.event.should == :save
-    listener.message[0..4].should == 'Saved'
+    keys = listener.data.keys
+    keys.should include :count
+    keys.should include :redis_id
   end
 end
