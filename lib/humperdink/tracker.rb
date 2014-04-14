@@ -2,11 +2,6 @@ module Humperdink
   class Tracker
     include HasEventListener
 
-    # This is included for backwards compatibility.
-    # :on_event should be considered deprecated
-    # and will be removed in the future
-    alias_method :on_event, :notify_event
-
     attr_reader :set, :config
 
     def initialize(set=Set.new, config={})
@@ -62,7 +57,7 @@ module Humperdink
     # and let life roll on without any tracking in the loop.
     def shutdown(exception)
       begin
-        notify_event(:shutdown, "#{exception.message}")
+        notify_event(:shutdown, { :exception_message => exception.message })
       rescue => e
         $stderr.puts([e.message, e.backtrace].join("\n")) rescue nil
       end

@@ -37,14 +37,13 @@ module Humperdink
       if exclusions = @config[:exclude_from_clean]
         @dirty.delete_if { |item| exclusions.detect { |regex| item =~ regex } }
       end
-      dirty_count = @dirty.count
       @clean.merge(@dirty)
       if max = @config[:max_clean_items]
         @clean.subtract(@clean.to_a[max..-1]) if @clean.length > max
       end
       cleaned = @dirty.to_a.dup # to_a just a pointer to the Set's internal Hash's keys
       @dirty.clear
-      notify_event(:clean!, "Cleaned #{dirty_count} members")
+      notify_event(:clean!, {:count => cleaned.count})
       cleaned
     end
 

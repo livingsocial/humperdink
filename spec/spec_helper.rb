@@ -4,11 +4,10 @@ require 'rspec'
 require 'timecop'
 
 class TestListener
-  attr_accessor :event, :state_hash, :message
+  attr_accessor :event, :data
 
-  def on_event(event, state_hash, message)
+  def on_event(event, data)
     @event = event
-    @state_hash = state_hash
-    @message = message
+    @data = data
   end
 end

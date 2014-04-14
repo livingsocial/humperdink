@@ -14,7 +14,7 @@ describe Tracker do
       @tempfile.open
     end
 
-    def on_event(event, state_hash, message)
+    def on_event(event, data)
       @tempfile.puts(event)
     end
   end
@@ -80,7 +80,7 @@ describe Tracker do
 
     tracker.shutdown(Exception.new 'foobar')
     listener.event.should == :shutdown
-    listener.message.should == 'foobar'
+    listener.data[:exception_message].should == 'foobar'
 
     tracker.tracker_enabled.should be_false
   end
